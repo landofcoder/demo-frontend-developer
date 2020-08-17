@@ -1,0 +1,31 @@
+$backGround: #333;
+$color: #f2f2f2;
+$bk_hover: #ddd;
+$color_hover: black;
+$bk_active: #4CAF50;
+$color_active: white;
+$overflow: hidden;
+$align: center;
+$padding: 14px 16px;
+$size: 17px;
+.topnav {
+    background-color: $backGround;
+    overflow: $overflow;
+}
+
+.topnav a {
+    float: left;
+    color: $color;
+    text-align: $align;
+    padding: $padding;
+    text-decoration: none;
+    font-size: $size;
+}
+.topnav a:hover {
+    background-color: $bk_hover;
+    color: $color_hover;
+}
+.topnav a.active {
+    background-color: $bk_active;
+    color: $color_active;
+}

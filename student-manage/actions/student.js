@@ -10,3 +10,9 @@ export const deleteStudent = (student) => {
         payload: student
     }
 }
+export const updateStudent = (student) => {
+    return {
+        type: 'UPDATE_STUDENT',
+        payload: student
+    }
+}

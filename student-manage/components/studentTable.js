@@ -1,20 +1,33 @@
 import React, { useState } from 'react'
-import {Table, Button, Modal} from 'react-bootstrap'
+import {Table, Button, Modal, Form} from 'react-bootstrap'
 
 
-
+const initialState = {id: '', name: '', birthday: '', gender: '', phone: ''}
 const StudentTable = (props) => {
-    const {studentList, studentClick} = props
+    const {studentList, studentClick, updateStudent} = props
     const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+    const [studentUpdate, setStudentUpdate] = useState(initialState)
+    const handleClose = () => setShow(false);
+    const handleShow = (student) => {
+        setShow(true)
+        setStudentUpdate(student)
+    };
     const clickHandler = (student) => {
         if (studentClick) {
             if (window.confirm('Are you sure want to delete student?')) {
                 studentClick(student)   
             }
         }
+    }
+    const onChangeUpdate = (event) => {
+        event.preventDefault()
+        setStudentUpdate({...studentUpdate, [event.target.name]: event.target.value})
+    }
+    const applyUpdate = (student) => {
+        if (updateStudent) {
+            updateStudent(student)
+        }
+        handleClose()
     }
     return (
         <div>
@@ -44,7 +57,7 @@ const StudentTable = (props) => {
                                             variant='primary'
                                             value={student.id}
                                             name="update"
-                                            onClick={handleShow}
+                                            onClick={() => handleShow(student)}
                                         >
                                             Update
                                         </Button>
@@ -65,17 +78,31 @@ const StudentTable = (props) => {
             </Table>
             <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Update Student </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <Form>
+                <Modal.Body>
+                    <Form.Control type='text' value={studentUpdate.name} name='name' onChange={onChangeUpdate}></Form.Control>
+                    <br/>
+                    <Form.Control type = 'date' value={studentUpdate.birthday} name='birthday' onChange={onChangeUpdate}></Form.Control>
+                    <br/>
+                    <Form.Control as='select' name='gender' value={studentUpdate.gender} onChange={onChangeUpdate}>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </Form.Control>
+                    <br/>
+                    <Form.Control type='text' value={studentUpdate.phone} name='phone' onChange={onChangeUpdate}></Form.Control>
+                    <br/>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="danger" onClick={handleClose}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={() => applyUpdate(studentUpdate)}>
+                    Update
+                </Button>
+                </Modal.Footer>
+        </Form>
       </Modal>
         </div>
     )

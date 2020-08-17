@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {Table, Button, Modal, Form, FormGroup} from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import StudentTable from './studentTable'
-import { addNewStudent, deleteStudent } from '../actions/student'
+import { addNewStudent, deleteStudent, updateStudent } from '../actions/student'
 
 const StudentDashboard = () => {
     const initialState = {id: Math.floor(Math.random()*1000 + 1), name: '', birthday: '', gender: '', phone: ''}
@@ -22,7 +22,10 @@ const StudentDashboard = () => {
     }
     const onChangeHandler = (event) => {
         event.preventDefault()
-        setInfo({...info, [event.target.name]: event.target.value})
+        setInfo({
+            ...info,
+            [event.target.name]: event.target.value
+        })
     }
     const studentClick = (student) => {
         const action = deleteStudent(student)
@@ -30,13 +33,15 @@ const StudentDashboard = () => {
     }
     
     const update = (student) => {
-        
+        console.log(student)
+        const action = updateStudent(student)
+        dispatch(action)
     }
     return (
         <div>
             
             <h1>Student Dashboard</h1>
-            <StudentTable studentList={studentList} studentClick={studentClick}></StudentTable>
+            <StudentTable studentList={studentList} studentClick={studentClick} updateStudent={update}></StudentTable>
 
             <Button variant="primary" onClick={handleShow}>
                 Add Student
@@ -67,7 +72,6 @@ const StudentDashboard = () => {
                             name="gender"
                             id="option1"
                             onChange={onChangeHandler}
-                            /* checked={info.gender == 'Male'?"checked":''} */
                         />
                         <Form.Check
                             type="radio"
@@ -75,7 +79,6 @@ const StudentDashboard = () => {
                             value="Female"
                             name="gender"
                             id="option2"
-                            /* checked={info.gender == 'Female'?"checked":''} */
                             onChange={onChangeHandler}
                         />
                     </Form.Group>

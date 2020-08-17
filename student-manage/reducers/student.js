@@ -34,6 +34,22 @@ const studentReducer = (state = initialState, action) => {
                 list: listClone
             }
         }
+        case 'UPDATE_STUDENT': {
+            const id = action.payload.id
+            console.log('ACTION ', action)
+            let listClone = [...state.list]
+            listClone = listClone.map(item => {
+                if (item.id != id) {
+                    return item;
+                }
+                else  return action.payload;
+            })
+            console.log(listClone)
+            return {
+                ...state,
+                list: listClone
+            }
+        }
         default:
             return state;
     }

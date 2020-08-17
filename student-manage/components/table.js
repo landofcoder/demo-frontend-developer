@@ -1,9 +1,12 @@
-import * as Boostrap from "react-bootstrap";
-import {useDebugValue, useEffect, useState} from "react";
+import * as Bootstrap from "react-bootstrap";
+import {useEffect, useState} from "react";
+import Form from './form'
 import React from "react";
+import {createStore} from "redux";
 
 const Table = () => {
     const [action, setAction] = useState({update: 0, delete: 1})
+    const [showUpdate, updateToggle] = useState(false)
     const [students, setStudents] = useState([
         {id: 1, name: 'Nguyen Van A', birthday: '2000-07-11',  gender: 'male', phone: '0123'},
         {id: 2, name: 'Nguyen Van B', birthday: '2000-07-12',  gender: 'female', phone: '0124'},
@@ -16,24 +19,37 @@ const Table = () => {
         {id: 9, name: 'Nguyen Van L', birthday: '2000-07-19',  gender: 'male', phone: '01211'},
         {id: 10, name: 'Nguyen Van M', birthday: '2000-07-20',  gender: 'female', phone: '01212'}
     ])
+    const [studentUpdate, changeStudentUpdate] = useState({})
     const clickHandler = (event) => {
         event.preventDefault()
         let array = [...students]
-        if (confirm('Are you sure ?'))
+        if (confirm('Are you sure ?')) {
+            array = array.filter((student) => {
+                if (student.id != event.target.value) {
+                    return student;
+                }
+            })
+            updateToggle(false)
+        }
+        setStudents(array)
+    }
+    const updateClickHandler = (event) => {
+        updateToggle(true)
+        let array = [...students]
         array = array.filter((student) => {
-            if (student.id != event.target.value) {
+            if (student.id == event.target.value) {
                 return student;
             }
         })
-        setStudents(array)
+        changeStudentUpdate(array[0])
     }
-    useEffect(() => {
-        console.log('Effect be called')
+    const handler = () => {
+        updateToggle(!showUpdate)
+    }
 
-    }, [action.delete])
     return (
         <React.Fragment>
-            <Boostrap.Table striped bordered hover>
+            <Bootstrap.Table striped bordered hover>
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -55,29 +71,30 @@ const Table = () => {
                                 <td>{student.gender}</td>
                                 <td>{student.phone}</td>
                                 <td>
-                                    <Boostrap.Button
+                                    <Bootstrap.Button
                                         variant='primary'
                                         value={student.id}
-                                        onClick={clickHandler}
+                                        onClick={updateClickHandler}
                                         name="update"
                                     >
                                         Update
-                                    </Boostrap.Button>
-                                    <Boostrap.Button
+                                    </Bootstrap.Button>
+                                    <Bootstrap.Button
                                         variant='danger'
                                         value={student.id}
                                         onClick={clickHandler}
                                         name="delete"
                                     >
                                         Delete
-                                    </Boostrap.Button>
+                                    </Bootstrap.Button>
                                 </td>
                             </tr>
                         )
                     })
                 }
                 </tbody>
-            </Boostrap.Table>
+            </Bootstrap.Table>
+            {showUpdate && <Form object={studentUpdate} handler={handler}></Form>}
         </React.Fragment>
     )
 }
